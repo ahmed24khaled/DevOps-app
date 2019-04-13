@@ -1,21 +1,22 @@
 pipeline {
   agent any
+  options { skipDefaultCheckout() }
   stages {
     stage('SCM') {
       steps {
-        git(url: 'https://github.com/ahmed24khaled/DevOps-app.git', branch: 'develop')
+        checkout scm
       }
     }
     stage('Compile') {
       agent {
         docker {
           image 'maven:3.6.0-jdk-8-alpine'
-          args '-v /home/.m2/repository:/root/.m2/repository'
+          args '-v /root/.m2/repository:/root/.m2/repository'
         }
 
       }
       steps {
-        sh ' mvn compile'
+        sh ' mvn clean compile'
       }
     }
   }
