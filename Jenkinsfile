@@ -33,6 +33,11 @@ pipeline {
         sh 'mvn test'
         //  stash(name: 'testedproject', useDefaultExcludes: false)
       }
+      post {
+        always {
+          junit 'target/surefire-reports/**/*.xml'
+        }
+      }
     }
   }
 }
