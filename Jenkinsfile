@@ -104,8 +104,7 @@ pipeline {
                     // using pmd plugin
                     step([$class: 'PmdPublisher',pattern: '**/target/pmd.xml'])
                     // using warnings next generation plugin
-                    scanForIssues tool: pmdParser(pattern: '**/target/pmd.xml')
-                    publishIssues([])
+                    recordIssues(tools: [pmdParser(pattern: '**/target/pmd.xml')])
                 }
             }
             stage('Findbugs') {
