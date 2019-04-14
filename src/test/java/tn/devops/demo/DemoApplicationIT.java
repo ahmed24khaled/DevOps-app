@@ -40,7 +40,7 @@ import tn.devops.demo.entities.Book;
 
 //The following annotation will add a MockMvc instance to the application context that will be injected to our "mvc" field 
 @AutoConfigureMockMvc
-public class DemoApplicationIntegrationTests {
+public class DemoApplicationIT {
 	
 	 @Autowired
 	 private MockMvc mvc;

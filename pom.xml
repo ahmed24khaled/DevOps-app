@@ -61,15 +61,39 @@
 				<groupId>org.springframework.boot</groupId>
 				<artifactId>spring-boot-maven-plugin</artifactId>
 			</plugin>
+			<plugin>
+	            <groupId>org.apache.maven.plugins</groupId>
+	            <artifactId>maven-checkstyle-plugin</artifactId>
+	            <version>3.0.0</version>
+	           <!--  This plugin comes with two predefined checks,a Sun-style check, and a Google-style check.
+	              The default check for a project is sun_checks.xml. -->
+	            <!-- <configuration>
+                	<configLocation>checkstyle.xml</configLocation>
+           	 	</configuration> -->
+	        </plugin>
+	        <plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-surefire-plugin</artifactId>
+				<configuration>
+					<skip>${surefire.skip}</skip>
+				</configuration>
+			</plugin>
+	        <plugin>
+			  <artifactId>maven-failsafe-plugin</artifactId>
+			  <executions>
+			    <execution>
+			      <goals>
+			        <goal>integration-test</goal>
+			        <goal>verify</goal>
+			      </goals>
+			    </execution>
+			  </executions>
+			</plugin>
 		</plugins>
 	</build>
 	<reporting>
     	<plugins>
-        	<plugin>
-	            <groupId>org.apache.maven.plugins</groupId>
-	            <artifactId>maven-checkstyle-plugin</artifactId>
-	            <version>3.0.0</version>
-	        </plugin>
+        	
 		    <plugin>
 		      <groupId>org.apache.maven.plugins</groupId>
 		      <artifactId>maven-pmd-plugin</artifactId>
