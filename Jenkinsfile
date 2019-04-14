@@ -39,6 +39,9 @@ pipeline {
       }
     }
     stage('Integration Tests') {
+     when {
+              branch 'develop'
+          }
       agent {
         docker {
           image 'maven:3.6.0-jdk-8-alpine'
@@ -52,6 +55,10 @@ pipeline {
       post {
         always {
           junit 'target/failsafe-reports/**/*.xml'
+        }
+        success {
+          stash(name: 'artifact', includes: 'target/*.jar')
+          archiveArtifacts 'target/*.jar'
         }
       }
     }
