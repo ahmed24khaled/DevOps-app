@@ -101,6 +101,19 @@ pipeline {
                     step([$class: 'PmdPublisher',pattern: '**/target/pmd.xml'])
                 }
             }
+            stage('Findbugs') {
+                agent {
+                    docker {
+                      image 'maven:3.6.0-jdk-8-alpine'
+                      args '-v /root/.m2/repository:/root/.m2/repository'
+                      reuseNode true
+                    }
+                }
+                steps {
+                    sh ' mvn findbugs:findbugs'
+                    findbugs pattern: '**/target/findbugsXml.xml'
+                }
+            }
       }
   }
 
