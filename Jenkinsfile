@@ -41,7 +41,7 @@ pipeline {
                       //useStableBuildAsReference: true
                     ])
                     // using warning next gen plugin
-                    recordIssues(aggregatingResults: true, tools: [checkStyle(pattern: '**/target/checkstyle-result.xml')])
+                    recordIssues(tools: [checkStyle(pattern: '**/target/checkstyle-result.xml')])
                   }
               }
         }
@@ -106,7 +106,7 @@ pipeline {
                     // using pmd plugin
                     step([$class: 'PmdPublisher',pattern: '**/target/pmd.xml'])
                     // using warnings next generation plugin
-                    recordIssues(aggregatingResults: true, tools: [pmdParser(pattern: '**/target/pmd.xml')])
+                    recordIssues(tools: [pmdParser(pattern: '**/target/pmd.xml')])
                 }
             }
             stage('Findbugs') {
@@ -122,7 +122,7 @@ pipeline {
                     // using findbugs plugin
                     findbugs pattern: '**/target/findbugsXml.xml'
                     // using warnings next generation plugin
-                    recordIssues aggregatingResults: true, tools: [findBugs(pattern: '**/target/findbugsXml.xml', useRankAsPriority: true)]
+                    recordIssues  tools: [findBugs(pattern: '**/target/findbugsXml.xml', useRankAsPriority: true)]
 
                 }
             }
@@ -137,11 +137,17 @@ pipeline {
             steps {
                 sh ' mvn javadoc:javadoc'
                 step([$class: 'JavadocArchiver',javadocDir: './target/site/apidocs', keepAll:'true'])
-                recordIssues aggregatingResults: true, tools: [javaDoc()]
+                recordIssues tools: [javaDoc(pattern: './target/site/apidocs/*')]
             }
         }
       }
+        post {
+        always {
+          sh 'ls'
+        }
+      }
   }
+
 
   }
 }
