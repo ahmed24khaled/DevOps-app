@@ -118,8 +118,8 @@ pipeline {
                     }
                 }
                 steps {
-                    sh ' mvn findbugs:findbugs
-                    // using findbugs plugin'
+                    sh ' mvn findbugs:findbugs'
+                    // using findbugs plugin
                     findbugs pattern: '**/target/findbugsXml.xml'
                     // using warnings next generation plugin
                     recordIssues aggregatingResults: true, tools: [findBugs(pattern: '**/target/findbugsXml.xml', useRankAsPriority: true)]
