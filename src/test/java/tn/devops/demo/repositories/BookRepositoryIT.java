@@ -26,8 +26,8 @@ import tn.devops.demo.entities.Book;
 
 
 
-
-public class BookRepositoryIntegrationTest {
+// BookRepositoryIntegrationTest
+public class BookRepositoryIT {
  
     @Autowired
     private TestEntityManager entityManager;
