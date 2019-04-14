@@ -40,6 +40,8 @@ pipeline {
                       unHealthy: '90',
                       //useStableBuildAsReference: true
                     ])
+                    // using warning next gen plugin
+                    recordIssues(tools: [checkStyle(pattern: '**/target/checkstyle-result.xml')])
                   }
               }
         }
