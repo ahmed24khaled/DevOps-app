@@ -40,8 +40,6 @@ pipeline {
                       unHealthy: '90',
                       //useStableBuildAsReference: true
                     ])
-                    // using warning next gen plugin
-                    recordIssues(tools: [checkStyle(pattern: '**/target/checkstyle-result.xml')])
                   }
               }
         }
@@ -105,8 +103,6 @@ pipeline {
                     sh ' mvn pmd:pmd'
                     // using pmd plugin
                     step([$class: 'PmdPublisher',pattern: '**/target/pmd.xml'])
-                    // using warnings next generation plugin
-                    recordIssues(tools: [pmdParser(pattern: '**/target/pmd.xml')])
                 }
             }
             stage('Findbugs') {
@@ -121,9 +117,6 @@ pipeline {
                     sh ' mvn findbugs:findbugs'
                     // using findbugs plugin
                     findbugs pattern: '**/target/findbugsXml.xml'
-                    // using warnings next generation plugin
-                    recordIssues  tools: [findBugs(pattern: '**/target/findbugsXml.xml', useRankAsPriority: true)]
-
                 }
             }
             stage('JavaDoc') {
@@ -137,13 +130,13 @@ pipeline {
             steps {
                 sh ' mvn javadoc:javadoc'
                 step([$class: 'JavadocArchiver',javadocDir: './target/site/apidocs', keepAll:'true'])
-                recordIssues tools: [javaDoc(pattern: './target/site/apidocs/*')]
             }
         }
       }
         post {
         always {
-          sh 'ls'
+          // using warning next gen plugin
+          recordIssues tools: [javaDoc(pattern: './target/site/apidocs/**'), checkStyle(pattern: '**/target/checkstyle-result.xml'), findBugs(pattern: '**/target/findbugsXml.xml', useRankAsPriority: true), pmdParser(pattern: '**/target/pmd.xml')]
         }
       }
   }
