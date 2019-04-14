@@ -45,6 +45,9 @@ pipeline {
         }
       }
    stage('Unit Tests') {
+    when {
+              branch 'master'
+          }
       agent {
         docker {
           image 'maven:3.6.0-jdk-8-alpine'
@@ -124,7 +127,7 @@ pipeline {
             }
             steps {
                 sh ' mvn javadoc:javadoc'
-                step([$class: 'JavadocArchiver',javadocDir: '**/target/site/apidocs', keepAll:'true'])
+                step([$class: 'JavadocArchiver',javadocDir: '/target/site/apidocs', keepAll:'true'])
             }
         }
       }
