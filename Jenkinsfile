@@ -136,7 +136,7 @@ pipeline {
             agent {
                 docker {
                   image 'maven:3.6.0-jdk-8-alpine'
-                  args "-v /root/.m2/repository:/root/.m2/repository -e SONARQUBE_URL=$(getent hosts sonarqube | awk '{ print $1 }') --net host"
+                  args "-v /root/.m2/repository:/root/.m2/repository -e SONARQUBE_URL=$(getent hosts $SONARQUBE_URL | awk '{ print \$1 }') --net host"
                   reuseNode true
                 }
             }
