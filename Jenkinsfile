@@ -72,7 +72,7 @@ pipeline {
   }
   stage('Unit Tests') {
    when {
-    branch 'master'
+    branch 'develop'
    }
    agent {
     docker {
@@ -110,6 +110,7 @@ pipeline {
     }
     success {
      stash(name: 'artifact', includes: 'target/*.jar')
+     stash(name: 'pom', includes: './pom.xml')
      // to add artifacts in jenkins pipeline tab (UI)
      archiveArtifacts 'target/*.jar'
     }
