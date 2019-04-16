@@ -92,7 +92,7 @@ pipeline {
   }
   stage('Integration Tests') {
    when {
-    branch 'master'
+    branch 'develop'
    }
    agent {
     docker {
