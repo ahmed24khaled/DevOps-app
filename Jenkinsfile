@@ -1,6 +1,21 @@
 pipeline {
  agent any
  environment {
+  // This can be nexus3 or nexus2
+  NEXUS_VERSION = "nexus3"
+  // This can be http or https
+  NEXUS_PROTOCOL = "http"
+  // Where your Nexus is running.in my case:
+   /*
+   "nexus" is the hostname of Nexus service. 
+   jenkins server can connect to Nexus without his ip address because this two services in deveops bridge network 
+   (docker manage DNS resolution between container).
+  */
+  NEXUS_URL = "nexus:8081"
+  // Repository where we will upload the artifact
+  NEXUS_REPOSITORY = "maven-snapshots"
+  // Jenkins credential id to authenticate to Nexus OSS
+  NEXUS_CREDENTIAL_ID = "nexus-credentials"
   /* 
     Windows: set the ip address of docker host.in my case 192.168.99.100.
     to obtains this address : $ docker-machine ip
@@ -160,6 +175,54 @@ pipeline {
     always {
      // using warning next gen plugin
      recordIssues aggregatingResults: true, tools: [javaDoc(), checkStyle(pattern: '**/target/checkstyle-result.xml'), findBugs(pattern: '**/target/findbugsXml.xml', useRankAsPriority: true), pmdParser(pattern: '**/target/pmd.xml')]
+    }
+   }
+  }
+  stage('Deploy Artifact To Nexus') {
+   when {
+    branch 'develop'
+   }
+   steps {
+    script {
+     unstash 'pom'
+     unstash 'artifact'
+     // Read POM xml file using 'readMavenPom' step , this step 'readMavenPom' is included in: https://plugins.jenkins.io/pipeline-utility-steps
+     pom = readMavenPom file: "pom.xml";
+     // Find built artifact under target folder
+     filesByGlob = findFiles(glob: "target/*.${pom.packaging}");
+     // Print some info from the artifact found
+     echo "${filesByGlob[0].name} ${filesByGlob[0].path} ${filesByGlob[0].directory} ${filesByGlob[0].length} ${filesByGlob[0].lastModified}"
+     // Extract the path from the File found
+     artifactPath = filesByGlob[0].path;
+     // Assign to a boolean response verifying If the artifact name exists
+     artifactExists = fileExists artifactPath;
+     if (artifactExists) {
+      nexusArtifactUploader(
+       nexusVersion: NEXUS_VERSION,
+       protocol: NEXUS_PROTOCOL,
+       nexusUrl: NEXUS_URL,
+       groupId: pom.groupId,
+       version: pom.version,
+       repository: NEXUS_REPOSITORY,
+       credentialsId: NEXUS_CREDENTIAL_ID,
+       artifacts: [
+        // Artifact generated such as .jar, .ear and .war files.
+        [artifactId: pom.artifactId,
+         classifier: '',
+         file: artifactPath,
+         type: pom.packaging
+        ],
+        // Lets upload the pom.xml file for additional information for Transitive dependencies
+        [artifactId: pom.artifactId,
+         classifier: '',
+         file: "pom.xml",
+         type: "pom"
+        ]
+       ]
+      )
+     } else {
+      error "*** File: ${artifactPath}, could not be found";
+     }
     }
    }
   }
