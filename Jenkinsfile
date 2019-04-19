@@ -17,7 +17,7 @@ pipeline {
   // Jenkins credential id to authenticate to Nexus OSS
   NEXUS_CREDENTIAL_ID = "nexus-credentials"
   /* 
-    Windows: set the ip address of docker host.in my case 192.168.99.100.
+    Windows: set the ip address of docker host. In my case 192.168.99.100.
     to obtains this address : $ docker-machine ip
     Linux: set localhost to SONARQUBE_URL
   */
