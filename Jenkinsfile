@@ -6,7 +6,7 @@ pipeline {
   // This can be http or https
   NEXUS_PROTOCOL = "http"
   // Where your Nexus is running. In my case:
-  NEXUS_URL = "e21f2d56.ngrok.io"
+  NEXUS_URL = "http://ec2-52-212-29-159.eu-west-1.compute.amazonaws.com:8081"
   // Repository where we will upload the artifact
   NEXUS_REPOSITORY = "maven-snapshots"
   // Jenkins credential id to authenticate to Nexus OSS
@@ -196,7 +196,7 @@ pipeline {
       nexusArtifactUploader(
        nexusVersion: NEXUS_VERSION,
        protocol: NEXUS_PROTOCOL,
-       nexusUrl: "192.168.99.100:8081",
+       nexusUrl: NEXUS_URL,
        groupId: pom.groupId,
        version: pom.version,
        repository: NEXUS_REPOSITORY,
