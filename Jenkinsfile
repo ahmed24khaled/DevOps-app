@@ -246,7 +246,7 @@ pipeline {
         REPO_VERSION=$(cat tmp4) &&
 
         export APP_SRC_URL="http://${NEXUS_URL}/repository/maven-snapshots/${repoPath}/${version}/${APP_NAME}-${REPO_VERSION}.war" &&
-        ansible-playbook -v -i ./ansible_provisioning/hosts ./ansible/dev.yml 
+        ansible-playbook -v -i ./ansible_provisioning/hosts ./ansible_provisioning/dev.yml 
 
        '''
      }
