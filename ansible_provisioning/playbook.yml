@@ -1,4 +1,4 @@
-- hosts: prod
+- hosts: staging
   roles:
     - deploy
   sudo: true
