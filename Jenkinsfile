@@ -257,9 +257,6 @@ pipeline {
    }
   }
    stage('Deploy to Production Servers') {
-   when {
-    branch 'develop'
-   }
    agent {
     docker {
      image 'ahmed24khaled/ansible-management'
