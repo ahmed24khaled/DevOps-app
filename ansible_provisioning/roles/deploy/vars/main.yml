@@ -1,0 +1,5 @@
+tmp_dir: /tmp/
+tmp_war: "{{tmp_dir}}/{{app_name}}"
+
+app_dir: "{{tomcat_dir}}"
+app_war: "{{app_dir}}/webapps/{{app_name}}.war"

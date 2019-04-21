@@ -5,13 +5,8 @@ pipeline {
   NEXUS_VERSION = "nexus3"
   // This can be http or https
   NEXUS_PROTOCOL = "http"
-  // Where your Nexus is running.in my case:
-   /*
-   "nexus" is the hostname of Nexus service. 
-   jenkins server can connect to Nexus without his ip address because this two services in deveops bridge network 
-   (docker manage DNS resolution between container).
-  */
-  NEXUS_URL = "nexus:8081"
+  // Where your Nexus is running. In my case:
+  NEXUS_URL = "192.168.99.100:8081"
   // Repository where we will upload the artifact
   NEXUS_REPOSITORY = "maven-snapshots"
   // Jenkins credential id to authenticate to Nexus OSS
@@ -168,7 +163,7 @@ pipeline {
       }
      }
      steps {
-       sh " mvn sonar:sonar -Dsonar.host.url=$SONARQUBE_URL:$SONARQUBE_PORT"
+      sh " mvn sonar:sonar -Dsonar.host.url=$SONARQUBE_URL:$SONARQUBE_PORT"
      }
     }
    }
@@ -223,6 +218,37 @@ pipeline {
       )
      } else {
       error "*** File: ${artifactPath}, could not be found";
+     }
+    }
+   }
+  }
+  stage('Deploy to Dev') {
+   agent {
+    docker {
+     image 'ahmed24khaled/ansible-management'
+     reuseNode true
+    }
+   }
+   steps {
+    script {
+
+     pom = readMavenPom file: "pom.xml"
+     repoPath = "${pom.groupId}".replace(".", "/") + "/${pom.artifactId}"
+     version = pom.version
+     artifactId = pom.artifactId
+     withEnv(["ANSIBLE_HOST_KEY_CHECKING=False", "APP_NAME=${artifactId}", "repoPath=${repoPath}", "version=${version}"]) {
+      sh '''
+      
+        curl --silent "http://$NEXUS_URL/repository/maven-snapshots/${repoPath}/${version}/maven-metadata.xml" > tmp &&
+        egrep '<value>+([0-9\\-\\.]*)' tmp > tmp2 &&
+        tail -n 1 tmp2 > tmp3 &&
+        tr -d "</value>[:space:]" < tmp3 > tmp4 &&
+        REPO_VERSION=$(cat tmp4) &&
+
+        export APP_SRC_URL="http://${NEXUS_URL}/repository/maven-snapshots/${repoPath}/${version}/${APP_NAME}-${REPO_VERSION}.war" &&
+        ansible-playbook -v -i ./ansible/hosts ./ansible/dev.yml 
+
+       '''
      }
     }
    }

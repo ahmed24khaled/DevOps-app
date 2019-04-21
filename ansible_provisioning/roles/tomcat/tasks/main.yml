@@ -1,0 +1,41 @@
+---
+
+- name: check tomcat
+  stat:
+    path={{tomcat_dir}}/bin
+  register: st
+
+#download tomcat if not exists
+- name: download tomcat
+  get_url:
+    url={{tomcat_url}}
+    dest=/tmp/apache-tomcat.tar.gz
+  when: not st.stat.exists
+
+- name: extract tomcat
+  unarchive:
+    src=/tmp/apache-tomcat.tar.gz
+    copy=no
+    dest=/tmp
+  when: not st.stat.exists
+
+- name: copy tomcat
+  shell:  mkdir -p {{tomcat_dir}} && cp -r /tmp/apache-tomcat-{{tomcat_version}}/* {{tomcat_dir}} creates={{tomcat_dir}}/bin
+  when: not st.stat.exists
+
+- name: Delete downloaded files
+  file:
+    state: absent
+    path: "/tmp/"
+  with_items:
+    - apache-tomcat.tar.gz
+    - apache-tomcat
+
+- name: install tomcat init script
+  template:
+    src=tomcat.sh
+    dest=/etc/init.d/tomcat
+    mode=0755
+  notify:
+    - register tomcat init script (add)
+    - register tomcat init script (level)

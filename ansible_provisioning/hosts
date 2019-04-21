@@ -1,0 +1,13 @@
+[local]
+localhost ansible_connection=local
+
+[prod]
+#172.31.0.4 ansible_connection=ssh ansible_ssh_user=ansible #ansible_ssh_pass=ansible ansible_sudo_pass=ansible
+192.168.99.100:2222 ansible_port=2222 ansible_connection=ssh ansible_ssh_user=ansible #ansible_ssh_pass=ansible ansible_sudo_pass=ansible
+
+[all:vars]
+ansible_connection=ssh
+host_key_checking = False
+ANSIBLE_HOST_KEY_CHECKING=False
+#ansible_user=root
+#ansible_ssh_pass=root

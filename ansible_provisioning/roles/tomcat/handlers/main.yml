@@ -1,0 +1,11 @@
+- name: register tomcat init script (add)
+  shell: update-rc.d  tomcat defaults
+
+#starting tomcat with priority 20 on runlevels 2, 3, 4
+- name: register tomcat init script (level)
+  shell: update-rc.d tomcat start 20 3 4 5
+
+- name: restart tomcat
+  service:
+    name=tomcat
+    state=restarted

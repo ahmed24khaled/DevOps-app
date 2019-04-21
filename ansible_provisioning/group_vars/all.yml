@@ -1,0 +1,2 @@
+app_src_url: "{{ lookup('env', 'APP_SRC_URL') }}"
+app_name: "{{ lookup('env', 'APP_NAME') }}"

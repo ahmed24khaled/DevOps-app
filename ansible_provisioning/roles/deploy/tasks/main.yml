@@ -1,0 +1,42 @@
+---
+
+  - name: create a temp dir
+    file:
+      path={{tmp_dir}}
+      state=directory
+
+  - name: Print Artifact URL
+    debug: 
+      msg: "URL {{app_src_url}}"
+
+  - name: get the WAR
+    get_url:
+      url={{app_src_url}}
+      dest={{tmp_war}}
+
+  - name: compute the MD5 of the new WAR
+    stat:
+      path={{tmp_war}}
+      get_md5=True
+    register: tmp_war_stat
+    changed_when: False
+
+  - name: compute the MD5 of the existing WAR
+    stat:
+      path={{app_war}}
+      get_md5=True
+    register: app_war_stat
+    changed_when: False
+
+  #- debug: var=tmp_war_stat.stat.md5
+  #- debug: var=app_war_stat.stat.md5
+
+  - name: copy the WAR
+    shell: cp {{tmp_war}} {{app_war}}
+    when: not app_war_stat.stat.md5 is defined or not tmp_war_stat.stat.md5 == app_war_stat.stat.md5
+    notify: restart tomcat
+
+  - name: Delete war from /tmp
+    file:
+      state: absent
+      path: "{{tmp_war}}"

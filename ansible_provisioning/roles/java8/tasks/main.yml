@@ -1,0 +1,12 @@
+- name: Install JDK 8 in Ubuntu 
+  apt: >
+    name=openjdk-8-jdk 
+    state=present
+  #when: ansible_pkg_mgr == 'apt'
+  when: ansible_distribution == "Ubuntu"
+
+- name: Install JDK 8 in CentOS 
+  package: >
+    name=java-1.8.0-openjdk state=present
+  #when: ansible_pkg_mgr == 'yum'
+  when: ansible_distribution == "CentOS"
