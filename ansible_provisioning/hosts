@@ -1,8 +1,11 @@
 [local]
 localhost ansible_connection=local
 
-[staging]
+[stagging]
 192.168.99.100:2222 ansible_port=2222 ansible_connection=ssh ansible_ssh_user=ansible #ansible_ssh_pass=ansible ansible_sudo_pass=ansible
+
+[production]
+ec2-52-212-29-159.eu-west-1.compute.amazonaws.com ansible_port=22 ansible_connection=ssh ansible_ssh_user=ansible #ansible_ssh_pass=ansible ansible_sudo_pass=ansible
 
 [all:vars]
 ansible_connection=ssh
