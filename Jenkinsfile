@@ -67,7 +67,7 @@ pipeline {
   }
   stage('Unit Tests') {
    when {
-    branch 'develop'
+    anyOf { branch 'master'; branch 'develop' }
    }
    agent {
     docker {
@@ -87,7 +87,7 @@ pipeline {
   }
   stage('Integration Tests') {
    when {
-    branch 'develop'
+    anyOf { branch 'master'; branch 'develop' }
    }
    agent {
     docker {
