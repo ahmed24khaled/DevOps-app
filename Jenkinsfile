@@ -176,7 +176,7 @@ pipeline {
   }
   stage('Deploy Artifact To Nexus') {
    when {
-    branch 'develop'
+    anyOf { branch 'master'; branch 'develop' }
    }
    steps {
     script {
@@ -222,9 +222,9 @@ pipeline {
     }
    }
   }
-  stage('Deploy to Stagging Servers') {
+  stage('Deploy to Staging Servers') {
    when {
-    branch 'develop'
+    anyOf { branch 'master'; branch 'develop' }
    }
    agent {
     docker {
@@ -249,7 +249,7 @@ pipeline {
         REPO_VERSION=$(cat tmp4) &&
 
         export APP_SRC_URL="${NEXUS_URL}/repository/maven-snapshots/${repoPath}/${version}/${APP_NAME}-${REPO_VERSION}.war" &&
-        ansible-playbook -v -i ./ansible_provisioning/hosts --extra-vars "host=stagging" ./ansible_provisioning/playbook.yml 
+        ansible-playbook -v -i ./ansible_provisioning/hosts --extra-vars "host=staging" ./ansible_provisioning/playbook.yml 
 
        '''
      }
@@ -257,6 +257,9 @@ pipeline {
    }
   }
    stage('Deploy to Production Servers') {
+   when {
+    branch 'master'
+   }
    agent {
     docker {
      image 'ahmed24khaled/ansible-management'
