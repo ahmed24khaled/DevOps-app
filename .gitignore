@@ -25,5 +25,10 @@ HELP.md
 /.nb-gradle/
 /build/
 
+### Docker-compose###
+jenkins-data
+sonarqube
+nexus-data
+
 ### VS Code ###
 .vscode/

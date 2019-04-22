@@ -1,0 +1,40 @@
+version: '3.5'
+
+services:
+
+  jenkins:
+    image: jenkinsci/blueocean
+    user: "root"
+    volumes:
+      - ./jenkins-data:/var/jenkins_home
+      - /var/run/docker.sock:/var/run/docker.sock  # Expose the docker daemon in the container
+      - ./jenkins-data/.m2:/var/jenkins_home/.m2/repository
+    ports:
+      - "8085:8080"
+    networks:
+      - devops
+  sonarqube:
+    image: sonarqube:alpine
+    volumes:
+      - ./sonarqube/conf:/opt/sonarqube/conf
+      - ./sonarqube/data:/opt/sonarqube/data
+      - ./sonarqube/extensions:/opt/sonarqube/extensions
+    ports:
+      - "9000:9000"
+      #  H2 embedded database server listening port, defaults to 9092
+      - "9092:9092"
+    networks:
+      - devops
+  nexus:
+    image: sonatype/nexus3
+    volumes:
+      - ./nexus-data:/nexus-data sonatype/nexus3
+    ports:
+      - "8081:8081"
+    networks:
+      - devops
+
+networks:
+  devops:
+    name: devops
+    driver: bridge
