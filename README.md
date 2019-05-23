@@ -6,4 +6,4 @@
 
 <br/><br/><br/>
 
-![pipeline2](https://user-images.githubusercontent.com/22007858/56510570-1eb54380-6522-11e9-9e6c-bef4e8c9af8e.JPG)
+![devops_pipeline](https://user-images.githubusercontent.com/22007858/58283286-35acb700-7da8-11e9-835b-418cb5c30dcf.jpg)
