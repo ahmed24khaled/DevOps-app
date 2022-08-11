@@ -1,4 +1,4 @@
-FROM ahmed24khaled/ubunutu-ssh-server
+FROM ahmed24khaled/ubuntu-ssh-server
 MAINTAINER Ahmed KHALED "https://github.com/ahmed24khaled"
 
 
